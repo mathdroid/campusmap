@@ -4,8 +4,9 @@
 <h5 align="center">Finding coordinates of Institut Teknologi Bandung's rooms and buildings has never been this easy.</h5>
 
 <hr />
-
+<div align="center">
 <img align="center" src="/72-Labtek VI-Dapur.png" />
+</div>
 
 # INSTALLATION
 
