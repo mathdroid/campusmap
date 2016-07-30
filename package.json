@@ -11,7 +11,8 @@
   "devDependencies": {
     "axios": "^0.13.1",
     "cheerio": "^0.20.0",
+    "jsdom": "^9.4.1",
     "nightmare": "^2.5.3",
-    "tabletojson": "^0.4.0"
+    "togeojson": "^0.13.0"
   }
 }
