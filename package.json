@@ -1,0 +1,17 @@
+{
+  "name": "campusmap",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Muhammad Mustadi <muhammad.mustadi@gmail.com> (http://mustadi.xyz)",
+  "license": "ISC",
+  "devDependencies": {
+    "axios": "^0.13.1",
+    "cheerio": "^0.20.0",
+    "nightmare": "^2.5.3",
+    "tabletojson": "^0.4.0"
+  }
+}
