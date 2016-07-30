@@ -5,6 +5,7 @@
 
 <hr />
 
+<img src="/72-Labtek VI-Dapur.png" />
 
 # INSTALLATION
 
