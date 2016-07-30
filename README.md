@@ -5,7 +5,7 @@
 
 <hr />
 
-<img src="/72-Labtek VI-Dapur.png" />
+<img align="center" src="/72-Labtek VI-Dapur.png" />
 
 # INSTALLATION
 
