@@ -18,7 +18,7 @@ const jsdom = require('jsdom').jsdom
 // }
 
 
-let kml = jsdom(fs.readFileSync('./campus.kml', 'utf8'))
+let kml = jsdom(fs.readFileSync('./data/campus.kml', 'utf8'))
 let converted = tj.kml(kml)
 let buildings = converted.features.map((feature) => {
   return {

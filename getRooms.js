@@ -56,7 +56,7 @@ axios.get(url).then(function(response) {
     })
     return rooms
 }).then((rooms) => {
-  fs.writeFile('./rooms.json', JSON.stringify({"rooms": rooms}, null, 2), (err) => {
+  fs.writeFile('./data/rooms.json', JSON.stringify({"rooms": rooms}, null, 2), (err) => {
     if (err) throw err
   })
 })
