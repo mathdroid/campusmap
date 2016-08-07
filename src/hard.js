@@ -22,7 +22,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 
 const baseUrl = 'http://petakampus.itb.ac.id/'
-let endpoint = 'lantai_gmap2.php?id_gedung='+100138+'&id_lantai='+10013801+'&gid='+3284
+let endpoint = 'lantai_gmap2.php?id_gedung='+100128+'&id_lantai='+10012801+'&gid='+2963
 
 axios.get(baseUrl+endpoint).then(function(response) {
 

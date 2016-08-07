@@ -28,7 +28,7 @@ let buildings = converted.features.map((feature) => {
     type: 'Polygon'
   }
 })
-
-fs.writeFile('./buildings.json', JSON.stringify({"buildings": buildings}, null, 2), (err) => {
-  if (err) throw err
-})
+console.log(buildings.length)
+// fs.writeFile('./buildings.json', JSON.stringify({"buildings": buildings}, null, 2), (err) => {
+//   if (err) throw err
+// })
