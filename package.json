@@ -12,6 +12,7 @@
     "axios": "^0.13.1",
     "cheerio": "^0.20.0",
     "jsdom": "^9.4.1",
+    "log-update": "^1.0.2",
     "nightmare": "^2.5.3",
     "togeojson": "^0.13.0"
   }

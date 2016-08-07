@@ -22,7 +22,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 
 const baseUrl = 'http://petakampus.itb.ac.id/'
-let endpoint = 'lantai_gmap2.php?id_gedung='+100128+'&id_lantai='+10012802+'&gid='+72
+let endpoint = 'lantai_gmap2.php?id_gedung='+100138+'&id_lantai='+10013801+'&gid='+3284
 
 axios.get(baseUrl+endpoint).then(function(response) {
 
@@ -42,7 +42,7 @@ axios.get(baseUrl+endpoint).then(function(response) {
       return coordString.split('),')[0].split(',').map((coordNumber) => {
         return Number(coordNumber)
       })
-    })
+    }).filter(pair => pair.length === 2 && !isNaN(pair[0]) && !isNaN(pair[1]))
     console.log(room)
     }
   })
