@@ -105,9 +105,9 @@ axios.get(url).then((response) => {
       let roomsInThisFloor = floorsToTraverse[floor]
       console.log(`  (${i}) Floor ${floor.slice(-2)}: ${roomsInThisFloor.length} rooms.`)
 
-      roomsInThisFloor.forEach(room => {
+      roomsInThisFloor.forEach((room, roomIdx) => {
         newFloor.rooms.push(room)
-        console.log(`    ${room.gId} > Room ${room.name} of building ${room.building}. initial coordinates: [${room.lat}, ${room.lon}]`)
+        if (roomIdx === 0) console.log(`    ${room.gId} > Room ${room.name} of building ${room.building}. initial coordinates: [${room.lat}, ${room.lon}]`)
       })
       floors.push(newFloor)
     })
@@ -128,17 +128,114 @@ axios.get(url).then((response) => {
   }
 })
 .then(obj => {
-  // console.log(obj.floors)
-  // console.log(JSON.stringify(obj.buildings, null, 2))
-  // console.log(JSON.stringify(obj.floors, null, 2))
-  // console.log(JSON.stringify(obj.rooms, null, 2))
-  fs.writeFile('./data/dbBuildings.min.json', JSON.stringify({"data": obj.buildings}), (err) => {
-    if (err) throw err
+  let { rooms, floors, buildings } = obj
+
+  return axios.all(floors.map(floor => {
+    return axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${floor.buildingId}&id_lantai=${floor.id}&gid=${floor.rooms[0].gId}`)
+  })).then(responses => {
+    console.log(`${responses.length} floors fetched for polygons.`)
+    let floorsProcessed = 0
+    let validatedRoomPolygons = []
+    let polygonsOfFloors = responses.map(response => {
+      let $ = cheerio.load(response.data)
+      // read the script, iterate over all trianglecoords, skip the first index (before the first 'var triangleCoords')
+      let rawPolygons = $('script')[1].children[0].data.split('var triangleCoords = [\r\n           \r\n        \r\n').slice(1)
+      let parsedPolygons = rawPolygons.map(rawPolygon => {
+        let newPolygon = {
+          type: 'polygon',
+          name: rawPolygon.split('document.getElementById(\'ifk\').innerHTML = \'')[1].split('\';')[0],
+          coordinates: rawPolygon.split('    \r\n    ];')[0].split('new google.maps.LatLng(').filter((elm, i) => {
+            return i > 0
+          }).map((coordString, i) => {
+            return coordString.split('),')[0].split(',').map((coordNumber) => {
+              let realNumber = Number(coordNumber)
+              return realNumber
+            })
+          }).filter((coordinate) => {
+            return ((coordinate[0] != null) && (coordinate[1] != null))
+          })
+        }
+        return newPolygon
+      })
+      // floorsProcessed++
+      // logUpdate(`parsing floor ${floorsProcessed} out of ${floors.length}`)
+      validatedRoomPolygons.push(parsedPolygons.slice(-1)[0])
+      return parsedPolygons.slice(0, -1)
+    })
+    return {
+      rooms,
+      floors,
+      buildings,
+      polygonsOfFloors,
+      validatedRoomPolygons
+    }
   })
-  fs.writeFile('./data/dbFloors.min.json', JSON.stringify({"data": obj.floors}), (err) => {
-    if (err) throw err
-  })
-  fs.writeFile('./data/dbRooms.min.json', JSON.stringify({"data": obj.rooms}), (err) => {
-    if (err) throw err
-  })
+
 })
+.then(obj => {
+  console.log('last resolve')
+  Object.keys(obj).forEach(key => {
+    console.log(key)
+  })
+  console.log(obj.polygonsOfFloors[0])
+  console.log(obj.validatedRoomPolygons[0])
+  console.log(obj.polygonsOfFloors[0].indexOf(obj.validatedRoomPolygons[0]))
+  // obj.validatedRoomPolygons.forEach(vrp => {
+  //   console.log(vrp.name)
+  // })
+  // obj.polygonsOfFloors.forEach(pof => {
+  //   console.log(pof.length)
+  // })
+})
+
+// axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`)
+// .then((response) => {
+//   let $ = cheerio.load(response.data)
+//   let rawPolygons = $('script')[1].children[0].data.split('var triangleCoords = [\r\n           \r\n        \r\n').slice(1)
+//   let parsedPolygons = rawPolygons.map(rawPolygon => {
+//     let newPolygon = {
+//       type: 'polygon',
+//       name: rawPolygon.split('document.getElementById(\'ifk\').innerHTML = \'')[1].split('\';')[0],
+//       coordinates: rawPolygon.split('    \r\n    ];')[0].split('new google.maps.LatLng(').filter((elm, i) => {
+//         return i > 0
+//       }).map((coordString, i) => {
+//         return coordString.split('),')[0].split(',').map((coordNumber) => {
+//           let realNumber = Number(coordNumber)
+//           return realNumber
+//         })
+//       }).filter((coordinate) => {
+//         return ((coordinate[0] != null) && (coordinate[1] != null))
+//       })
+//     }
+//     return newPolygon
+//   })
+//   return parsedPolygons
+// })
+// .then(polygons => {
+//   polygonsOfThisFloor = polygons.slice(0, -1)
+//   polygonOfThisRoom = polygons.slice(-1)[0]
+//
+//   console.log(polygonOfThisRoom)
+//   return {
+//     polygonOfThisRoom,
+//     polygonsOfThisFloor
+//   }
+// })
+
+// .then(obj => {
+//   // console.log(obj.floors)
+//   // console.log(JSON.stringify(obj.buildings, null, 2))
+//   // console.log(JSON.stringify(obj.floors, null, 2))
+//   // console.log(JSON.stringify(obj.rooms, null, 2))
+//   fs.writeFile('./data/database.js', `export const buildings = ${JSON.stringify({"data": obj.buildings})}
+//   export const floors = ${JSON.stringify({"data": obj.floors})}
+//   export const rooms = ${JSON.stringify({"data": obj.rooms})}\n`, (err) => {
+//     if (err) throw err
+//   })
+//   // fs.writeFile('./data/dbFloors.min.json', JSON.stringify({"data": obj.floors}), (err) => {
+//   //   if (err) throw err
+//   // })
+//   // fs.writeFile('./data/dbRooms.min.json', JSON.stringify({"data": obj.rooms}), (err) => {
+//   //   if (err) throw err
+//   // })
+// })
