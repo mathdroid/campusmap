@@ -14,6 +14,7 @@
     "jsdom": "^9.4.1",
     "log-update": "^1.0.2",
     "nightmare": "^2.5.3",
+    "progress": "^1.1.8",
     "togeojson": "^0.13.0"
   }
 }
