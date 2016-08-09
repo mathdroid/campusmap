@@ -12,150 +12,37 @@
 
 > Tested on Node v6.3.1
 
-1. `git clone` this repository
+1. `$ git clone PATH_TO_THIS_REPO` this repository
 
-2. `npm install`
+2. `$ npm install`
 
-3. `node getBuildings.js` or `node getRooms.js`
+3. `$ node init.js`
 
-# EXAMPLE
+# RESULT
 
->Room example
+`init.js` will provide results in data/ folder.
 
-Returns coordinates and the floor level (last 2 digits of `floorId`)
+1. `database.js` which will export (CommonJS) 5 things:
+  1. `buildings` which is an `array` of building objects.
+  2. `floors` which is an `array` of floor objects.
+  3. `rooms` which is an `array` of room objects.
+  4. `polygonsOfFloors` which is an `array` of floor objects, but instead of rooms they have polygons of each room in that floor.
+  5. `validatedPolygons` which is an `array` of polygons fetched using the rooms of `rooms` array.
+2. `db.min.json` which contains `buildings`, `floors`, `rooms`, `polygonsOfFloors`, `validatedPolygons` in a JSON (not prettified) format.
+3. `db${key}.min.json` with one of the key from above, contains their value, respectively.
 
-```json
-{
-  "rooms": [
-    {
-      "name": "Dapur",
-      "building": "Labtek VI",
-      "lat": "-6.89017306193434",
-      "lon": "107.609718226161",
-      "alt": "0",
-      "heading": "0",
-      "tilt": "30",
-      "range": "200",
-      "buildingId": "100128",
-      "floorId": "10012802",
-      "gId": "72"
-    },
-  ]
-}
-```
 
-> Building example
-
-Returns coordinates required to make a Polygon in Google Maps
-
-```json
-{
-  "buildings": [
-    {
-      "id": "100181",
-      "name": "Aula Barat",
-      "coordinates": [
-        [
-          107.609607418844,
-          -6.89234515668262,
-          15
-        ],
-        [
-          107.609607171525,
-          -6.89229996813034,
-          15
-        ],
-        [
-          107.609641622674,
-          -6.8922997798156,
-          15
-        ],
-        [
-          107.609641340022,
-          -6.89224813575718,
-          15
-        ],
-        [
-          107.609965037191,
-          -6.89224636627552,
-          15
-        ],
-        [
-          107.60996529632,
-          -6.89229370664946,
-          15
-        ],
-        [
-          107.610001900654,
-          -6.89229350653769,
-          15
-        ],
-        [
-          107.610002140157,
-          -6.89233726051881,
-          15
-        ],
-        [
-          107.610099033987,
-          -6.89233673079438,
-          15
-        ],
-        [
-          107.610099836718,
-          -6.89248337117428,
-          15
-        ],
-        [
-          107.610015562985,
-          -6.89248383191484,
-          15
-        ],
-        [
-          107.610016141479,
-          -6.89258951092741,
-          15
-        ],
-        [
-          107.609607990878,
-          -6.89259174218788,
-          15
-        ],
-        [
-          107.609607436029,
-          -6.89249036681331,
-          15
-        ],
-        [
-          107.609516044746,
-          -6.89249086637231,
-          15
-        ],
-        [
-          107.609515250046,
-          -6.89234566048129,
-          15
-        ],
-        [
-          107.609607418844,
-          -6.89234515668262,
-          15
-        ]
-      ],
-      "type": "Polygon"
-    },
-  ]
-}
-
-```
 
 # TODO
 
-- Map each floor in a building for its rooms.
+- [x] Map each floor in a building for its rooms.
 
-- Create Android Client
+- [ ] Create Android Client
 
-- Create iOS Client
+- [ ] Create iOS Client
 
 # CONTRIBUTE
 
 Reach me out here or just make a PR.
+
+&copy; Muhammad Mustadi - 2016

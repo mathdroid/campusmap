@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "axios": "^0.13.1",
+    "babel-cli": "^6.11.4",
     "cheerio": "^0.20.0",
     "jsdom": "^9.4.1",
     "log-update": "^1.0.2",

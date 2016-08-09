@@ -184,6 +184,9 @@ axios.get(url).then((response) => {
       validatedRoomPolygons.push(parsedPolygons.slice(-1)[0])
       // return parsedPolygons.slice(0, -1)
       return {floorId: floor.id, buildingId: floor.buildingId, polygons: parsedPolygons.slice(0, -1)}
+    }).catch(reason => {
+      console.log(reason)
+      console.log(floor.id)
     })
   })).then(polygonsOfFloors => {
     return {
@@ -205,9 +208,9 @@ axios.get(url).then((response) => {
   return axios.all(rooms.map(room => {
     return axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`).then(resp => {
       bar.tick(1)
-      let $ = cheerio.load(response.data)
+      let $ = cheerio.load(resp.data)
       // read the script, iterate over all trianglecoords, skip the first index (before the first 'var triangleCoords')
-      let rawPolygon = $('script')[1].children[0].data.split('var triangleCoords = [\r\n           \r\n        \r\n').slice(-1) // get the terminal elm
+      let rawPolygon = $('script')[1].children[0].data.split('var triangleCoords = [\r\n           \r\n        \r\n').slice(-1)[0] // get the terminal elm
       let parsedPolygon = {
         type: 'polygon',
         name: rawPolygon.split('document.getElementById(\'ifk\').innerHTML = \'')[1].split('\';')[0],
@@ -235,6 +238,9 @@ axios.get(url).then((response) => {
       }
 
       return parsedPolygon
+    }).catch(reason => {
+      console.log(reason)
+      console.log(room.name + room.building)
     })
   })).then(validatedPolygons => {
     return {
@@ -256,18 +262,30 @@ axios.get(url).then((response) => {
     console.log(key)
     console.log(obj[key].length)
   })
+  return obj
 })
 
 .then(obj => {
   console.log('saving data...')
+
+  fs.writeFile('./data/db.min.json', JSON.stringify({"data": obj}), (err) => {
+    if (err) throw err
+  })
+
   // console.log(obj.floors)
   // console.log(JSON.stringify(obj.buildings, null, 2))
   // console.log(JSON.stringify(obj.floors, null, 2))
   // console.log(JSON.stringify(obj.rooms, null, 2))
-  fs.writeFile('./data/database.js', `${Object.keys(obj).map(key => {
-    return `export const ${key} = ${JSON.stringify({"data": obj[key]})}`
-  }).join('\n')}\n`, (err) => {
+  let fileString = Object.keys(obj).map(key => {
+    return `exports.${key} = ${JSON.stringify({"data": obj[key]})}`
+  }).join('\n')
+  fs.writeFile('./data/database.js', fileString + '\n', (err) => {
     if (err) throw err
+  })
+  Object.keys(obj).forEach(key => {
+    fs.writeFile(`./data/db${key}.min.json`, JSON.stringify({"data": obj[key]}), (err) => {
+      if (err) throw err
+    })
   })
   // fs.writeFile('./data/dbFloors.min.json', JSON.stringify({"data": obj.floors}), (err) => {
   //   if (err) throw err
