@@ -8,9 +8,9 @@ var Room = require('./models').Room
 module.exports.rooms = function * rooms(next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
-  let rooms = yield Room.find({})
+  let newRooms = yield Room.find({})
   // Set rooms as JSON response
-  this.body = rooms
+  this.body = newRooms
 }
 
 module.exports.roomByName = function * roomByName(name, next) {

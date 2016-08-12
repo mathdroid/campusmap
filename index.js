@@ -1,1 +1,2 @@
-require(./init)
+require('babel-register')
+require('./init')

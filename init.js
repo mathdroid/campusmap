@@ -6,6 +6,13 @@ const logUpdate = require('log-update')
 
 const ProgressBar = require('progress')
 
+// axios.interceptors.request.use(function (config) {
+//     // Do something before request is sent
+//     return config;
+//   }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   });
 
 const url = 'http://petakampus.itb.ac.id/search/search_map.php'
 const baseUrl = 'http://petakampus.itb.ac.id/'
@@ -205,10 +212,10 @@ axios.get(url).then((response) => {
   let { rooms, floors, buildings, polygonsOfFloors, validatedRoomPolygons } = obj
   let roomsProcessed = 0
   let failedQueue = []
-  let bar = new ProgressBar('Crawl progress: :current/:total [:bar] :percent :etas', { total: rooms.length })
+  let bar = new ProgressBar('Crawl progress: :current/:total. Failed: :failed [:bar] :percent :etas', { total: rooms.length, failed: failedQueue.length })
   return axios.all(rooms.map(room => {
     return axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`).then(resp => {
-      bar.tick(1)
+      bar.tick({'failed': failedQueue.length})
       let $ = cheerio.load(resp.data)
       // read the script, iterate over all trianglecoords, skip the first index (before the first 'var triangleCoords')
       let rawPolygon = $('script')[1].children[0].data.split('var triangleCoords = [\r\n           \r\n        \r\n').slice(-1)[0] // get the terminal elm
