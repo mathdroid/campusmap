@@ -83,9 +83,8 @@ GET /floor-polygons/id/:floorId -> Returns the floor polygons from floors with i
 GET /v-room-polygons -> List all the Room polygons
 
 GET /v-room-polygons/name/:name -> List all the RP with name :name.
-GET /v-room-polygons/id/:roomId -> List all the RP with id :roomId.
 
-(MORE HERE)
+GET /v-room-polygons/id/:roomId -> List all the RP with id :roomId.
 
 OPTIONS / -> Gives the list of allowed request types.
 
