@@ -16,7 +16,7 @@
 
 2. `$ npm install`
 
-3. `$ node init.js`
+3. `$ node index.js`
 
 # RESULT
 
@@ -37,12 +37,12 @@
 
 - [x] Map each floor in a building for its rooms.
 
-- [ ] API server
+- [x] API server
   - [x] Rooms
-  - [ ] Floors
-  - [ ] Buildings
-  - [ ] Floor Polygons
-  - [ ] Room Polygons
+  - [x] Floors
+  - [x] Buildings
+  - [x] Floor Polygons
+  - [x] Room Polygons
 
 
 - [ ] Create Android Client
@@ -55,7 +55,7 @@
 
 After running init, seed the Mongo database using `server/seed.js` or manually with the data from `data/`
 
-Run `$ node server/server.js`.
+Run `$ node server/index.js`.
 
 Routes:
 
@@ -63,6 +63,29 @@ Routes:
 GET /rooms -> List all the rooms in JSON.
 
 GET /rooms/name/:name -> Returns the rooms containing the name :name (using regex)
+
+GET /rooms/id/:roomId' -> Returns the rooms with id :roomId
+
+GET /floors -> List all the floors.
+
+GET /floors/id/:id -> Returns the floors with id :id
+
+GET /buildings -> List all the buildings
+
+GET /buildings/name/:name -> List all the buildings containing name :name
+
+GET /buildings/id/:id -> List all the buildings containing id :id
+
+GET /floor-polygons -> List all the floor Polygons
+
+GET /floor-polygons/id/:floorId -> Returns the floor polygons from floors with id :floorId
+
+GET /v-room-polygons -> List all the Room polygons
+
+GET /v-room-polygons/name/:name -> List all the RP with name :name.
+GET /v-room-polygons/id/:roomId -> List all the RP with id :roomId.
+
+(MORE HERE)
 
 OPTIONS / -> Gives the list of allowed request types.
 

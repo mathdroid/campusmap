@@ -113,7 +113,7 @@ module.exports.vRoomPolygonsById = function * vRoomPolygonsById(roomId, next) {
 
 module.exports.home = function * home(next) {
   if ('GET' != this.method) return yield next;
-  this.body = yield {msg: 'welcome to campusmap API server 🎉'}
+  this.body = yield {msg: 'welcome to campusmap API server 🎉', docs: 'https://github.com/mathdroid/campusmap'}
 }
 
 module.exports.head = function *(){
