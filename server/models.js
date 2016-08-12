@@ -46,14 +46,7 @@ exports.Building = mongoose.model('buildings', new mongoose.Schema({
 exports.FloorPolygon = mongoose.model('floorPolygons', new mongoose.Schema({
   floorId: String,
   buildingId: String,
-  polygons: [{
-    type: String,
-    name: String,
-    buildingName: String,
-    buildingId: String,
-    floorId: String,
-    coordinates: [[]]
-  }]
+  polygons: []
 
 }))
 exports.VRoomPolygon = mongoose.model('vRoomPolygons', new mongoose.Schema({
