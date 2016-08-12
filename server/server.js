@@ -1,3 +1,4 @@
+'use strict'
 // Dependencies
 var koa = require('koa')
 var route = require('koa-route')

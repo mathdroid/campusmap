@@ -1,3 +1,4 @@
+'use strict'
 const axios = require('axios')
 const cheerio = require('cheerio')
 const fs = require('fs')
@@ -203,7 +204,7 @@ axios.get(url).then((response) => {
   console.log('creating list of validated room polygons.')
   let { rooms, floors, buildings, polygonsOfFloors, validatedRoomPolygons } = obj
   let roomsProcessed = 0
-
+  let failedQueue = []
   let bar = new ProgressBar('Crawl progress: :current/:total [:bar] :percent :etas', { total: rooms.length })
   return axios.all(rooms.map(room => {
     return axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`).then(resp => {
@@ -216,15 +217,10 @@ axios.get(url).then((response) => {
         name: rawPolygon.split('document.getElementById(\'ifk\').innerHTML = \'')[1].split('\';')[0],
         roomName: room.name,
         buildingName: room.building,
-        // lat: attrib[0],
-        // lon: attrib[1],
-        // alt: attrib[2],
-        // heading: attrib[3],
-        // tilt: attrib[4],
-        // range: attrib[5],
         buildingId: room.buildingId,
         floorId: room.floorId,
         gId: room.gId,
+        roomId: room.floorId + room.gId,
         coordinates: rawPolygon.split('    \r\n    ];')[0].split('new google.maps.LatLng(').filter((elm, i) => {
           return i > 0
         }).map((coordString, i) => {
@@ -239,8 +235,10 @@ axios.get(url).then((response) => {
 
       return parsedPolygon
     }).catch(reason => {
-      console.log(reason)
-      console.log(room.name + room.building)
+      // console.log(reason)
+      // console.log(room.name + room.building)
+      failedQueue.push(room)
+      console.log(failedQueue.length + ' Errored rooms.')
     })
   })).then(validatedPolygons => {
     return {

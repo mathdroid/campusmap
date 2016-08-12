@@ -1,3 +1,4 @@
+'use strict'
 // var mongoose = require('mongoose')
 // // Set up MongoDB connection
 // var connection = mongoose.connect('localhost/campusmap')
