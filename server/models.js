@@ -51,7 +51,7 @@ exports.FloorPolygon = mongoose.model('floorPolygons', new mongoose.Schema({
     buildingName: String,
     buildingId: String,
     floorId: String,
-    coordinates: []
+    coordinates: [[]]
   }]
 
 }))
