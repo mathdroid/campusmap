@@ -24,6 +24,15 @@ module.exports.roomsByName = function * roomsByName(name, next) {
   // Set rooms as JSON response
   this.body = rooms
 }
+
+module.exports.roomsById = function * roomsById(roomId, next) {
+  if ('GET' != this.method) return yield next;
+  // Query for all rooms
+  let rooms = yield Room.find({'roomId': {'$regex': roomId, '$options': 'i'}})
+  // Set rooms as JSON response
+  this.body = rooms
+}
+
 module.exports.floors = function * floors(next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
@@ -32,10 +41,10 @@ module.exports.floors = function * floors(next) {
   this.body = newFloors
 }
 
-module.exports.floorsByName = function * floorsByName(name, next) {
+module.exports.floorsById = function * floorsById(id, next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
-  let floors = yield Floor.find({'name': {'$regex': name, '$options': 'i'}})
+  let floors = yield Floor.find({'id': {'$regex': id, '$options': 'i'}})
   // Set rooms as JSON response
   this.body = floors
 }
@@ -55,6 +64,14 @@ module.exports.buildingsByName = function * buildingsByName(name, next) {
   this.body = buildings
 }
 
+module.exports.buildingsById = function * buildingsById(id, next) {
+  if ('GET' != this.method) return yield next;
+  // Query for all rooms
+  let buildings = yield Building.find({'id': {'$regex': id, '$options': 'i'}})
+  // Set rooms as JSON response
+  this.body = buildings
+}
+
 module.exports.floorPolygons = function * floorPolygons(next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
@@ -63,10 +80,10 @@ module.exports.floorPolygons = function * floorPolygons(next) {
   this.body = newFloorPoly
 }
 
-module.exports.floorPolygonsByName = function * floorPolygonsByName(name, next) {
+module.exports.floorPolygonsById = function * floorPolygonsById(floorId, next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
-  let floors = yield FloorPolygon.find({'name': {'$regex': name, '$options': 'i'}})
+  let floors = yield FloorPolygon.find({'floorId': {'$regex': floorId, '$options': 'i'}})
   // Set rooms as JSON response
   this.body = floors
 }
@@ -82,6 +99,14 @@ module.exports.vRoomPolygonsByName = function * vRoomPolygonsByName(name, next) 
   if ('GET' != this.method) return yield next;
   // Query for all rooms
   let rooms = yield VRoomPolygon.find({'name': {'$regex': name, '$options': 'i'}})
+  // Set rooms as JSON response
+  this.body = rooms
+}
+
+module.exports.vRoomPolygonsById = function * vRoomPolygonsById(roomId, next) {
+  if ('GET' != this.method) return yield next;
+  // Query for all rooms
+  let rooms = yield VRoomPolygon.find({'roomId': {'$regex': roomId, '$options': 'i'}})
   // Set rooms as JSON response
   this.body = rooms
 }

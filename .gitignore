@@ -1,10 +1,9 @@
 
 petakampus.*
 bermuda.*
-data/
-data/*
 queue.js
 .imdone/
+data/
 
 # Created by https://www.gitignore.io/api/node
 

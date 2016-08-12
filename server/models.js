@@ -12,7 +12,8 @@ exports.Room = mongoose.model('rooms', new mongoose.Schema({
   range: Number,
   buildingId: String,
   floorId: String,
-  gId: String
+  gId: String,
+  roomId: String
 }))
 
 exports.Floor = mongoose.model('floors', new mongoose.Schema({
