@@ -1,4 +1,4 @@
-
+'use strict'
 var mongoose = require('mongoose')
 mongoose.connect('localhost/campusmap')
 var campusData = require('../data/database')
