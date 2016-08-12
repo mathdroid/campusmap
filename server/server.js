@@ -6,6 +6,10 @@ var compress = require('koa-compress')
 var logger = require('koa-logger')
 var mongoose = require('mongoose')
 var Room = require('./models').Room
+var Floor = require('./models').Floor
+var Building = require('./models').Building
+var FloorPolygon = require('./models').FloorPolygon
+var VRoomPolygon = require('./models').VRoomPolygon
 const controller = require('./controller')
 
 // Set up MongoDB connection
@@ -18,7 +22,15 @@ app.use(logger())
 // API routes
 app.use(route.get('/', controller.home))
 app.use(route.get('/rooms', controller.rooms))
-app.use(route.get('/rooms/name/:name', controller.roomByName))
+app.use(route.get('/rooms/name/:name', controller.roomsByName))
+app.use(route.get('/floors', controller.floors))
+app.use(route.get('/floors/name/:name', controller.floorsByName))
+app.use(route.get('/buildings', controller.buildings))
+app.use(route.get('/buildings/name/:name', controller.buildingsByName))
+app.use(route.get('/floor-polygons', controller.floorPolygons))
+app.use(route.get('/floor-polygons/name/:name', controller.floorPolygonsByName))
+app.use(route.get('/v-room-polygons', controller.vRoomPolygons))
+app.use(route.get('/v-room-polygons/name/:name', controller.vRoomPolygonsByName))
 
 app.use(route.options('/', controller.options));
 app.use(route.trace('/', controller.trace));
