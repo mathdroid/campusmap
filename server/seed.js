@@ -6,7 +6,7 @@ var Room = require('./models').Room
 var Floor = require('./models').Floor
 var Building = require('./models').Building
 var FloorPolygon = require('./models').FloorPolygon
-var RoomPolygon = require('./models').RoomPolygon
+var VRoomPolygon = require('./models').VRoomPolygon
 
 // console.log(Object.keys(campusData))
 // campusData.rooms.data.forEach(room => {
@@ -35,7 +35,7 @@ Object.keys(campusData).forEach(key => {
         newObj = new FloorPolygon()
         break
       case 'validatedPolygons':
-        newObj = new RoomPolygon()
+        newObj = new VRoomPolygon()
         break
       default:
         break
