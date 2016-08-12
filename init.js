@@ -6,7 +6,7 @@ const logUpdate = require('log-update')
 
 const ProgressBar = require('progress')
 
-var throttle = require('promise-ratelimit')(100)
+var throttle = require('promise-ratelimit')(50)
 
 // axios.interceptors.request.use(function (config) {
 //
@@ -249,6 +249,7 @@ axios.get(url).then((response) => {
       // console.log(reason)
       // console.log(room.name + room.building)
       failedQueue.push(room)
+      console.log(reason)
       console.log(failedQueue.length + ' Errored rooms.')
     })
   })).then(validatedPolygons => {
