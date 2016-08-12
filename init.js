@@ -6,7 +6,11 @@ const logUpdate = require('log-update')
 
 const ProgressBar = require('progress')
 
-var throttle = require('promise-ratelimit')(50)
+const PromiseThrottle = require('promise-throttle')
+var promiseThrottle = new PromiseThrottle({
+  requestsPerSecond: 10,           // up to 1 request per second
+  promiseImplementation: Promise  // the Promise library you are using
+});
 
 // axios.interceptors.request.use(function (config) {
 //
@@ -155,7 +159,7 @@ axios.get(url).then((response) => {
 
   let bar = new ProgressBar('Crawled floor ":floorId" : :current/:total [:bar] :percent :etas', { total: floors.length })
   return axios.all(floors.map(floor => {
-    return throttle().then(() => axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${floor.buildingId}&id_lantai=${floor.id}&gid=${floor.rooms[0].gId}`)).then(response => {
+    return promiseThrottle.add(() => axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${floor.buildingId}&id_lantai=${floor.id}&gid=${floor.rooms[0].gId}`)).then(response => {
 //       floorsProcessed++
 //       logUpdate(`Polygons for floor ${floor.id} is here.
 // Progress = ${floorsProcessed}/${floors.length} floors.`)
@@ -218,7 +222,7 @@ axios.get(url).then((response) => {
   let failedQueue = []
   let bar = new ProgressBar('Crawl progress: :current/:total. Failed: :failed [:bar] :percent :etas', { total: rooms.length, failed: failedQueue.length })
   return axios.all(rooms.map(room => {
-    return throttle().then(() => axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`)).then(resp => {
+    return promiseThrottle.add(() => axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${room.buildingId}&id_lantai=${room.floorId}&gid=${room.gId}`)).then(resp => {
       bar.tick({'failed': failedQueue.length})
       let $ = cheerio.load(resp.data)
       // read the script, iterate over all trianglecoords, skip the first index (before the first 'var triangleCoords')
