@@ -8,19 +8,10 @@ const ProgressBar = require('progress')
 
 const PromiseThrottle = require('promise-throttle')
 var promiseThrottle = new PromiseThrottle({
-  requestsPerSecond: 10,           // up to 1 request per second
+  requestsPerSecond: 15,           // up to 1 request per second
   promiseImplementation: Promise  // the Promise library you are using
 });
 
-// axios.interceptors.request.use(function (config) {
-//
-//   return limiter.removeTokens(1, (err, remainingRequests) => {
-//     return config
-//   })
-//   }, function (error) {
-//     // Do something with request error
-//     return Promise.reject(error);
-//   });
 
 const url = 'http://petakampus.itb.ac.id/search/search_map.php'
 const baseUrl = 'http://petakampus.itb.ac.id/'
@@ -53,6 +44,7 @@ axios.get(url).then((response) => {
       range: attrib[5],
       buildingId: attrib[6],
       floorId: attrib[7],
+      roomId: room.floorId + room.gId,
       gId: attrib[8]
     }
     if (gids.indexOf(room.gId) === -1) {
@@ -88,9 +80,6 @@ axios.get(url).then((response) => {
   Object.keys(floorsToTraverse).forEach(floor => {
     buildingsToTraverse[floor.slice(0, -2)].push(floor)
   })
-  // console.log(buildingsToTraverse)
-  // console.log(floorsToTraverse)
-  // console.log(roomsResponse)
   return {
     roomsResponse,
     floorsToTraverse,
@@ -155,15 +144,10 @@ axios.get(url).then((response) => {
   console.log('Crawling for the polygons of each floor')
   let { rooms, floors, buildings } = obj
   let validatedRoomPolygons = []
-  let floorsProcessed = 0
 
   let bar = new ProgressBar('Crawled floor ":floorId" : :current/:total [:bar] :percent :etas', { total: floors.length })
   return axios.all(floors.map(floor => {
     return promiseThrottle.add(() => axios.get(baseUrl + `lantai_gmap2.php?id_gedung=${floor.buildingId}&id_lantai=${floor.id}&gid=${floor.rooms[0].gId}`)).then(response => {
-//       floorsProcessed++
-//       logUpdate(`Polygons for floor ${floor.id} is here.
-// Progress = ${floorsProcessed}/${floors.length} floors.`)
-//       if (floorsProcessed === floors.length) logUpdate.done()
       bar.tick({'floorId': floor.id})
       let $ = cheerio.load(response.data)
       // read the script, iterate over all trianglecoords, skip the first index (before the first 'var triangleCoords')
@@ -173,15 +157,9 @@ axios.get(url).then((response) => {
           type: 'polygon',
           name: rawPolygon.split('document.getElementById(\'ifk\').innerHTML = \'')[1].split('\';')[0],
           buildingName: floor.buildingName,
-          // lat: attrib[0],
-          // lon: attrib[1],
-          // alt: attrib[2],
-          // heading: attrib[3],
-          // tilt: attrib[4],
-          // range: attrib[5],
+
           buildingId: floor.buildingId,
           floorId: floor.id,
-          // gId: attrib[8]
           coordinates: rawPolygon.split('    \r\n    ];')[0].split('new google.maps.LatLng(').filter((elm, i) => {
             return i > 0
           }).map((coordString, i) => {
@@ -195,10 +173,7 @@ axios.get(url).then((response) => {
         }
         return newPolygon
       })
-      // floorsProcessed++
-      // logUpdate(`parsing floor ${floorsProcessed} out of ${floors.length}`)
       validatedRoomPolygons.push(parsedPolygons.slice(-1)[0])
-      // return parsedPolygons.slice(0, -1)
       return {floorId: floor.id, buildingId: floor.buildingId, polygons: parsedPolygons.slice(0, -1)}
     }).catch(reason => {
       console.log(reason)
@@ -235,7 +210,7 @@ axios.get(url).then((response) => {
         buildingId: room.buildingId,
         floorId: room.floorId,
         gId: room.gId,
-        roomId: room.floorId + room.gId,
+        roomId: room.roomId,
         coordinates: rawPolygon.split('    \r\n    ];')[0].split('new google.maps.LatLng(').filter((elm, i) => {
           return i > 0
         }).map((coordString, i) => {
@@ -250,8 +225,6 @@ axios.get(url).then((response) => {
 
       return parsedPolygon
     }).catch(reason => {
-      // console.log(reason)
-      // console.log(room.name + room.building)
       failedQueue.push(room)
       console.log(reason)
       console.log(failedQueue.length + ' Errored rooms.')
@@ -270,11 +243,8 @@ axios.get(url).then((response) => {
 
 .then(obj => {
   console.log('last resolve')
-  // console.log(obj)
-  // console.log(obj.length)
   Object.keys(obj).forEach(key => {
-    console.log(key)
-    console.log(obj[key].length)
+    console.log(key + ': ' + obj[key].length)
   })
   return obj
 })
@@ -286,10 +256,6 @@ axios.get(url).then((response) => {
     if (err) throw err
   })
 
-  // console.log(obj.floors)
-  // console.log(JSON.stringify(obj.buildings, null, 2))
-  // console.log(JSON.stringify(obj.floors, null, 2))
-  // console.log(JSON.stringify(obj.rooms, null, 2))
   let fileString = Object.keys(obj).map(key => {
     return `exports.${key} = ${JSON.stringify({"data": obj[key]})}`
   }).join('\n')
@@ -301,10 +267,4 @@ axios.get(url).then((response) => {
       if (err) throw err
     })
   })
-  // fs.writeFile('./data/dbFloors.min.json', JSON.stringify({"data": obj.floors}), (err) => {
-  //   if (err) throw err
-  // })
-  // fs.writeFile('./data/dbRooms.min.json', JSON.stringify({"data": obj.rooms}), (err) => {
-  //   if (err) throw err
-  // })
 })
