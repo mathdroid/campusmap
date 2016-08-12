@@ -37,9 +37,39 @@
 
 - [x] Map each floor in a building for its rooms.
 
+- [ ] API server
+  - [x] Rooms
+  - [ ] Floors
+  - [ ] Buildings
+  - [ ] Floor Polygons
+  - [ ] Room Polygons
+
+
 - [ ] Create Android Client
 
 - [ ] Create iOS Client
+
+# SERVER
+
+> Requires MongoDB
+
+After running init, seed the Mongo database using `server/seed.js` or manually with the data from `data/`
+
+Run `$ node server/server.js`.
+
+Routes:
+
+```
+GET /rooms -> List all the rooms in JSON.
+
+GET /rooms/name/:name -> Returns the rooms containing the name :name (using regex)
+
+OPTIONS / -> Gives the list of allowed request types.
+
+HEAD / -> HTTP headers only, no body.
+
+TRACE / -> Blocked for security reasons.
+```
 
 # CONTRIBUTE
 
