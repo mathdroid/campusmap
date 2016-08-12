@@ -42,6 +42,7 @@ Object.keys(campusData).forEach(key => {
     }
     Object.assign(newObj, obj)
     newObj.save()
+    newObj = {}
 
   })
 })
