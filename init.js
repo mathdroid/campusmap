@@ -44,8 +44,8 @@ axios.get(url).then((response) => {
       range: attrib[5],
       buildingId: attrib[6],
       floorId: attrib[7],
-      roomId: room.floorId + room.gId,
-      gId: attrib[8]
+      gId: attrib[8],
+      roomId: attrib[7] + attrib[8]
     }
     if (gids.indexOf(room.gId) === -1) {
       rooms.push(room)
