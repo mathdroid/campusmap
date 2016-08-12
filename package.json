@@ -24,6 +24,7 @@
     "mongoose": "^4.5.8",
     "nightmare": "^2.5.3",
     "progress": "^1.1.8",
+    "promise-ratelimit": "0.0.2",
     "togeojson": "^0.13.0"
   }
 }
