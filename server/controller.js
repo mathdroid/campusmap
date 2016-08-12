@@ -78,7 +78,7 @@ module.exports.vRoomPolygons = function * vRoomPolygons(next) {
   this.body = newRooms
 }
 
-module.exports.vRoomsByName = function * vRoomsByName(name, next) {
+module.exports.vRoomPolygonsByName = function * vRoomPolygonsByName(name, next) {
   if ('GET' != this.method) return yield next;
   // Query for all rooms
   let rooms = yield VRoomPolygon.find({'name': {'$regex': name, '$options': 'i'}})
